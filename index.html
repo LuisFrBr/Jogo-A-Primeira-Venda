@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Primeira Venda</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="palco">
+    <div id="cenario"></div>
+
+    <div id="personagem-esq" class="personagem"></div>
+    <div id="personagem-dir" class="personagem"></div>
+
+    <div id="hud-dinheiro">💰 R$ <span id="dinheiro">300</span></div>
+
+    <div id="ps5">
+      <div class="ps5-titulo">PS5</div>
+      <div class="ps5-trilho"><div id="ps5-preench"></div></div>
+      <div id="ps5-pct">0%</div>
+    </div>
+
+    <button id="aba-objetivos" type="button">Objetivos</button>
+    <div id="painel-objetivos" hidden>Comprar o PS5 – R$ 3.500</div>
+
+    <div id="dialogo">
+      <div id="retrato"></div>
+      <div id="conteudo">
+        <div id="nome"></div>
+        <div id="texto"></div>
+        <div id="escolhas"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/jogo.js"></script>
+</body>
+</html>
