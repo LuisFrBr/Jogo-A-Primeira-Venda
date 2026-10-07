@@ -68,7 +68,8 @@ body {
 #hud-dinheiro {
   position: absolute;
   top: 2.5em;
-  left: 5em;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 3;
   padding: .5em 1.2em;
   border-radius: 2em;
@@ -177,6 +178,12 @@ body {
 #nome { margin-bottom: .3em; color: #ffb3c7; font-size: 1.8em; font-weight: bold; }
 #texto { font-size: 2em; line-height: 1.35; cursor: pointer; }
 
+#nome:empty { display: none; }
+#texto.narracao { font-style: italic; }
+#texto.acao { font-style: italic; color: #d9c4b0; }
+#texto.pronto::after { content: " \25BC"; color: #ff8fb3; font-size: .6em; animation: piscar 1s infinite; }
+@keyframes piscar { 50% { opacity: .2; } }
+
 #escolhas { display: none; }
 #conteudo.modo-escolhas #nome,
 #conteudo.modo-escolhas #texto { display: none; }
@@ -201,4 +208,5 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   #ps5-preench { transition: none; }
+  #texto.pronto::after { animation: none; }
 }
