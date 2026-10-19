@@ -210,3 +210,33 @@ body {
   #ps5-preench { transition: none; }
   #texto.pronto::after { animation: none; }
 }
+
+/* ---------- Fade entre cenas, ganho de dinheiro e telas ---------- */
+#fade { position: absolute; inset: 0; z-index: 9; background: #000; opacity: 0; pointer-events: none; transition: opacity .5s; }
+#fade.ativo { opacity: 1; }
+
+.ganho {
+  position: absolute; top: 9em; left: 50%; z-index: 4; font-size: 3em; font-weight: bold;
+  text-shadow: 0 .08em .25em #000; transform: translateX(-50%); pointer-events: none;
+  animation: subir 1.8s ease-out forwards;
+}
+.ganho.positivo { color: #7dff9a; }
+.ganho.negativo { color: #ff7d7d; }
+@keyframes subir { 0% { opacity: 0; top: 12em; } 20% { opacity: 1; } 100% { opacity: 0; top: 7em; } }
+
+.tela {
+  position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 1em; padding: 3em; text-align: center;
+  background: radial-gradient(circle at 50% 35%, #4a2a20, #140b08 75%); color: #fff4e6;
+}
+.tela h1 { font-size: 6em; color: #ffb3c7; line-height: 1.1; }
+.tela h2 { font-size: 2em; color: #ffb3c7; margin-top: .6em; }
+.tela .sub { font-size: 2.4em; }
+.tela .dica { font-size: 1.6em; color: #d9c4b0; }
+.tela ul { font-size: 1.6em; line-height: 1.5; text-align: left; list-style: none; }
+.tela li::before { content: "\2022"; margin-right: .6em; color: #ff5c8a; }
+.tela .grande {
+  margin-top: .6em; padding: .5em 1.8em; border: 0; border-radius: 2em; background: #ff5c8a; color: #fff;
+  font: bold 2.2em "Trebuchet MS", "Segoe UI", Arial, sans-serif; cursor: pointer;
+}
+.tela .grande:hover, .tela .grande:focus-visible { background: #ff7aa2; outline: none; }
