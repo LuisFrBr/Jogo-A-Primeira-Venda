@@ -11,7 +11,7 @@ Object.assign(CENAS, {
   cena2: { proxima: 'cena3', passos: [
     N('Sábado de manhã. Lista na mão, potinho debaixo do braço e o coração batendo mais rápido do que deveria.', { fundo: 'bg_mercadinho', esq: 'eduardo_nervoso', dir: null }),
     N('O plano é simples: leite condensado, chocolate e manteiga. O difícil é fazer isso sem gastar tudo o que eu tenho.'),
-    A('(Eduardo entra. Seu Zé levanta os olhos do jornal.)', { dir: 'seuze_serio' }),
+    A('(Eduardo entra. Seu Zé levanta os olhos do jornal.)', { dir: 'seuze_serio', dirClasse: 'atras-balcao' }),
     F('Seu Zé', 'Eduardo? O filho da Cláudia? Vai levar o mercado inteiro hoje?'),
     E('Bom dia, Seu Zé. É que... eu vou fazer brigadeiro pra vender.'),
     F('Seu Zé', '(cruzando os braços) Vender. Hum. E você já fez a conta de quanto vai gastar e de quanto vai ganhar?'),
@@ -156,11 +156,11 @@ Object.assign(CENAS, {
     N('Era a maior oportunidade até agora. E a maior chance de dar errado.'),
     { escolhas: [
       { texto: 'Aceitar e pedir ajuda à minha mãe.', saldo: 850, resultado: [
-        F('Cláudia', 'Cem brigadeiros? Então vamos dividir as panelas.', { fundo: 'bg_cozinha', dir: 'claudia_rindo' }),
+        F('Cláudia', 'Cem brigadeiros? Então vamos dividir as panelas.', { fundo: 'bg_cozinha', esq: 'claudia_rindo', dir: 'eduardo_nervoso' }),
         A('Os dois enrolam brigadeiro a noite toda, e ela conta como a vovó fazia. A entrega é perfeita e a Dona Marta indica o Eduardo para a vizinhança inteira.'),
-        N('Eu achava que pedir ajuda era perder. Descobri que era ganhar tempo, e uma noite inesquecível.', { esq: 'eduardo_animado' }) ] },
+        N('Eu achava que pedir ajuda era perder. Descobri que era ganhar tempo, e uma noite inesquecível.', { dir: 'eduardo_animado' }) ] },
       { texto: 'Aceitar e fazer tudo sozinho, a noite toda.', saldo: 650, resultado: [
-        A('Eduardo faz a maior parte na cozinha, sozinho, dorme na aula na sexta e entrega com atraso. A Dona Marta paga, mas um pouco menos.', { fundo: 'bg_cozinha', dir: null, esq: 'eduardo_cansado' }),
+        A('Eduardo faz a maior parte na cozinha, sozinho, dorme na aula na sexta e entrega com atraso. A Dona Marta paga, mas um pouco menos.', { fundo: 'bg_cozinha', esq: null, dir: 'eduardo_cansado' }),
         N('Entreguei. Mas quase não chego vivo.') ] },
       { texto: 'Recusar para estudar para a prova.', saldo: 100, resultado: [
         F('Dona Marta', 'Tudo bem, filho. Estudar vem primeiro.', { dir: 'dona_marta_sorrindo' }),

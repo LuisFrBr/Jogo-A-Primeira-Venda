@@ -15,6 +15,15 @@ let aguardandoEscolha = false;
 let temporizador = null;
 let textoCompleto = '';
 const estado = { esq: null, dir: null };
+const classes = { esq: '', dir: '' };
+const tokens = { esq: 0, dir: 0 };
+
+/* Altura de cada personagem em relação ao Eduardo (1 = mesma altura dele). Ajuste à vontade. */
+const ALTURA_BASE = 38; /* em: a altura do Eduardo */
+const ALTURAS = { eduardo: 1, claudia: 0.97, seuze: 0.86, silvia: 1, julia: 0.93, rick: 1.06, dona_marta: 0.86, thiago: 0.75 };
+/* Para onde cada desenho olha. O jogo espelha a imagem quando o personagem precisa olhar para o outro lado. */
+const OLHA_PARA_DIREITA = ['eduardo']; /* todos os outros olham para a esquerda */
+const SEM_ESPELHO = ['thiago'];
 
 const palco = document.getElementById('palco');
 const conteudo = document.getElementById('conteudo');
@@ -37,26 +46,64 @@ function colocarCenario(arquivo) {
   caixa.appendChild(img);
 }
 
-function colocarPersonagem(lado, arquivo) {
-  const caixa = document.getElementById('personagem-' + lado);
-  estado[lado] = arquivo;
-  caixa.innerHTML = '';
-  if (!arquivo) return;
-  const img = new Image();
-  img.alt = arquivo;
-  img.onerror = () => {
-    caixa.innerHTML = '<div class="placeholder">' + arquivo + '</div>';
-  };
-  img.src = 'assets/personagens/' + arquivo + '.png';
-  caixa.appendChild(img);
+function prefixoArquivo(arquivo) {
+  return arquivo.replace(/_[^_]+$/, '');
 }
 
-function colocarRetrato(arquivo, letra) {
+function prefixoFala(quem) {
+  const nome = quem.replace(/\(.*?\)/g, '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  return nome === 'seu ze' ? 'seuze' : nome.replace(/ /g, '_');
+}
+
+function deveEspelhar(prefixo, lado) {
+  if (SEM_ESPELHO.includes(prefixo)) return false;
+  return OLHA_PARA_DIREITA.includes(prefixo) ? lado === 'dir' : lado === 'esq';
+}
+
+function colocarPersonagem(lado, arquivo) {
+  const caixa = document.getElementById('personagem-' + lado);
+  const anterior = estado[lado];
+  estado[lado] = arquivo;
+  caixa.className = 'personagem ' + classes[lado];
+
+  if (!arquivo) {
+    caixa.classList.add('saindo');
+    setTimeout(() => {
+      if (!estado[lado]) { caixa.innerHTML = ''; caixa.classList.remove('saindo'); }
+    }, 250);
+    return;
+  }
+
+  const prefixo = prefixoArquivo(arquivo);
+  const entrando = !anterior || prefixoArquivo(anterior) !== prefixo;
+  const token = ++tokens[lado];
+  const img = new Image();
+  img.alt = arquivo;
+  img.style.height = ALTURA_BASE * (ALTURAS[prefixo] || 1) + 'em';
+  if (deveEspelhar(prefixo, lado)) img.classList.add('espelhado');
+  img.onload = () => {
+    if (token !== tokens[lado]) return;
+    caixa.replaceChildren(img); /* a imagem antiga só sai quando a nova já está pronta */
+    if (entrando) {
+      caixa.classList.add('entrando-' + lado);
+      caixa.addEventListener('animationend', () => caixa.classList.remove('entrando-' + lado), { once: true });
+    }
+  };
+  img.onerror = () => {
+    if (token === tokens[lado]) caixa.innerHTML = '<div class="placeholder">' + arquivo + '</div>';
+  };
+  img.src = 'assets/personagens/' + arquivo + '.png';
+}
+
+/* Retrato da caixa de diálogo: só aparece se quem fala está na tela (vozes ficam sem retrato). */
+function atualizarRetrato(quem) {
   const caixa = document.getElementById('retrato');
-  caixa.innerHTML = '<span>' + letra + '</span>';
+  const prefixo = prefixoFala(quem);
+  const arquivo = [estado.esq, estado.dir].find((f) => f && prefixoArquivo(f) === prefixo);
+  caixa.style.visibility = arquivo ? 'visible' : 'hidden';
   if (!arquivo) return;
   const img = new Image();
-  img.onload = () => caixa.appendChild(img);
+  img.onload = () => caixa.replaceChildren(img);
   img.src = 'assets/personagens/' + arquivo + '.png';
 }
 
@@ -70,11 +117,11 @@ function coletarImagens(passos, fundos, personagens) {
   });
 }
 
-function precarregarCena(id) {
-  if (!id || !CENAS[id]) return;
+function precarregarTudo() {
   const fundos = new Set();
   const personagens = new Set();
-  coletarImagens(CENAS[id].passos, fundos, personagens);
+  Object.values(CENAS).forEach((c) => coletarImagens(c.passos, fundos, personagens));
+  Object.values(FINAIS).forEach((f) => coletarImagens(f, fundos, personagens));
   fundos.forEach((n) => { new Image().src = 'assets/bg/' + n + '.png'; });
   personagens.forEach((n) => { new Image().src = 'assets/personagens/' + n + '.png'; });
 }
@@ -128,23 +175,23 @@ function avancar() {
 
 function executarPasso(p) {
   if (p.fundo) colocarCenario(p.fundo);
+  if ('esqClasse' in p) classes.esq = p.esqClasse;
+  if ('dirClasse' in p) classes.dir = p.dirClasse;
   if ('esq' in p) colocarPersonagem('esq', p.esq);
   if ('dir' in p) colocarPersonagem('dir', p.dir);
   if (p.escolhas) { mostrarEscolhas(p.escolhas); return; }
   if (p.decidirFinal) { decidirFinal(); return; }
 
   elNome.textContent = p.quem || '';
-  if (p.quem) {
-    const arquivo = p.quem.startsWith('Eduardo') ? estado.esq : estado.dir;
-    colocarRetrato(arquivo, p.quem.charAt(0));
-  }
+  if (p.quem) atualizarRetrato(p.quem);
   digitar(p.texto, p.estilo);
 }
 
 function iniciarCena(id) {
   cenaAtual = id;
   fila = CENAS[id].passos.slice();
-  precarregarCena(CENAS[id].proxima);
+  classes.esq = '';
+  classes.dir = '';
   avancar();
 }
 
@@ -249,4 +296,4 @@ document.getElementById('btn-reiniciar').addEventListener('click', () => locatio
 
 /* ---------- Início ---------- */
 atualizarHUD();
-precarregarCena('cena1');
+precarregarTudo();
