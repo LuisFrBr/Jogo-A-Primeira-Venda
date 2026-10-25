@@ -95,16 +95,31 @@ function colocarPersonagem(lado, arquivo) {
   img.src = 'assets/personagens/' + arquivo + '.png';
 }
 
-/* Retrato da caixa de diálogo: só aparece se quem fala está na tela (vozes ficam sem retrato). */
+/* Retrato da caixa de diálogo. Vozes sem imagem (cliente, colega) mostram uma silhueta anônima. */
+const SILHUETA = '<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="38" r="18" fill="#d8cdc4"/><path d="M14 94c0-21 16-33 36-33s36 12 36 33z" fill="#d8cdc4"/></svg>';
+
+function mostrarSilhueta(caixa) {
+  caixa.classList.add('anonimo');
+  caixa.innerHTML = SILHUETA;
+}
+
 function atualizarRetrato(quem) {
   const caixa = document.getElementById('retrato');
   const prefixo = prefixoFala(quem);
   const arquivo = [estado.esq, estado.dir].find((f) => f && prefixoArquivo(f) === prefixo);
-  caixa.style.visibility = arquivo ? 'visible' : 'hidden';
-  if (!arquivo) return;
+  if (!arquivo) { mostrarSilhueta(caixa); return; }
+
+  const mostrar = (img) => { caixa.classList.remove('anonimo'); caixa.replaceChildren(img); };
   const img = new Image();
-  img.onload = () => caixa.replaceChildren(img);
-  img.src = 'assets/personagens/' + arquivo + '.png';
+  img.onload = () => mostrar(img);
+  img.onerror = () => { /* sem retrato pronto: usa um recorte do personagem */
+    const corpo = new Image();
+    corpo.className = 'corpo';
+    corpo.onload = () => mostrar(corpo);
+    corpo.onerror = () => mostrarSilhueta(caixa);
+    corpo.src = 'assets/personagens/' + arquivo + '.png';
+  };
+  img.src = 'assets/retratos/' + arquivo + '.png';
 }
 
 /* Carrega antes as imagens da próxima cena, para não aparecer fundo vazio na troca. */
@@ -123,7 +138,10 @@ function precarregarTudo() {
   Object.values(CENAS).forEach((c) => coletarImagens(c.passos, fundos, personagens));
   Object.values(FINAIS).forEach((f) => coletarImagens(f, fundos, personagens));
   fundos.forEach((n) => { new Image().src = 'assets/bg/' + n + '.png'; });
-  personagens.forEach((n) => { new Image().src = 'assets/personagens/' + n + '.png'; });
+  personagens.forEach((n) => {
+    new Image().src = 'assets/personagens/' + n + '.png';
+    new Image().src = 'assets/retratos/' + n + '.png';
+  });
 }
 
 /* ---------- Dinheiro e barra do PS5 ---------- */

@@ -156,7 +156,7 @@ Object.assign(CENAS, {
     N('Era a maior oportunidade até agora. E a maior chance de dar errado.'),
     { escolhas: [
       { texto: 'Aceitar e pedir ajuda à minha mãe.', saldo: 850, resultado: [
-        F('Cláudia', 'Cem brigadeiros? Então vamos dividir as panelas.', { fundo: 'bg_cozinha', esq: 'claudia_rindo', dir: 'eduardo_nervoso' }),
+        F('Cláudia', 'Cem brigadeiros? Então vamos dividir as panelas.', { fundo: 'bg_cozinha', esq: 'claudia_rindo', esqClasse: 'atras-mesa', dir: 'eduardo_nervoso' }),
         A('Os dois enrolam brigadeiro a noite toda, e ela conta como a vovó fazia. A entrega é perfeita e a Dona Marta indica o Eduardo para a vizinhança inteira.'),
         N('Eu achava que pedir ajuda era perder. Descobri que era ganhar tempo, e uma noite inesquecível.', { dir: 'eduardo_animado' }) ] },
       { texto: 'Aceitar e fazer tudo sozinho, a noite toda.', saldo: 650, resultado: [
@@ -254,19 +254,15 @@ const FINAIS = {
 };
 
 const TELA_FINAL = {
-  fantastico: ['🌟 Final fantástico', 'O sonho virou negócio!'],
-  bom: ['✅ Final bom', 'O PS5 é seu!'],
+  fantastico: ['Final fantástico', 'O sonho virou negócio!'],
+  bom: ['Final bom', 'O PS5 é seu!'],
   ruim: ['Final ruim', 'Tente de novo!'],
 };
 
 const LICOES = [
   'Qualidade e custo andam juntos.',
-  'Conversar e negociar abre portas.',
-  'Pedir licença evita problemas.',
   'Divulgar e aceitar ajuda multiplicam as vendas.',
   'Antecipar problemas protege o produto.',
   'O concorrente também pode ser parceiro.',
-  'Prazo e trabalho em equipe.',
   'Perseverar e ouvir os clientes.',
-  'Investir na apresentação.',
 ];

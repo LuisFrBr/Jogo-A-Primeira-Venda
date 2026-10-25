@@ -18,7 +18,7 @@ const CENAS = {
       { quem: 'Eduardo', estilo: 'narracao',
         texto: 'Eu tenho R$ 300 nesse potinho. E uma ideia... meio queimada.' },
 
-      { esq: 'claudia_cansada', estilo: 'acao', texto: '(A porta abre. Entra Cláudia.)' },
+      { esq: 'claudia_cansada', esqClasse: 'atras-mesa', estilo: 'acao', texto: '(A porta abre. Entra Cláudia.)' },
       { quem: 'Cláudia', texto: 'Edu? Ainda acordado? Que cheiro é esse... queimado?' },
       { quem: 'Eduardo', texto: 'É um brigadeiro. Quer dizer... era.' },
       { esq: 'claudia_rindo', quem: 'Cláudia', texto: '(rindo) Era. E por que você resolveu virar confeiteiro?' },
